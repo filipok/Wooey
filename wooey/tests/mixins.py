@@ -37,3 +37,13 @@ class ScriptFactoryMixin(object):
         self.translate_script = factories.generate_script(os.path.join(config.WOOEY_TEST_SCRIPTS, 'translate.py'))
         self.choice_script = factories.generate_script(os.path.join(config.WOOEY_TEST_SCRIPTS, 'choices.py'))
         super(ScriptFactoryMixin, self).setUp()
+
+class FileMixin(object):
+    def setUp(self):
+        self.storage = utils.get_storage(local=not wooey_settings.WOOEY_EPHEMERAL_FILES)
+        self.filename_func = lambda x: os.path.join(wooey_settings.WOOEY_SCRIPT_DIR, x)
+        super(FileMixin, self).setUp()
+
+    def get_any_file(self):
+        script = os.path.join(config.WOOEY_TEST_SCRIPTS, 'command_order.py')
+        return self.storage.save(self.filename_func('command_order.py'), open(script))
