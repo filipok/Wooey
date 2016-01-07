@@ -411,6 +411,7 @@ class ScriptParameters(WooeyPy2Mixin, models.Model):
         #  handle type conversion on the way back out
         field = self.parameter.form_field
         add_file = False
+        checksum = None
         if field == self.CHAR:
             if value is None:
                 value = None
@@ -433,8 +434,10 @@ class ScriptParameters(WooeyPy2Mixin, models.Model):
                 value = path
             else:
                 if value:
-                    path = os.path.join(self.job.get_upload_path(), os.path.split(value.name)[1])
                     local_storage = utils.get_storage(local=True)
+                    current_path = local_storage.path(value)
+                    checksum = utils.get_checksum(value)
+                    path = utils.get_upload_path(current_path, checksum=checksum)
                     if hasattr(value, 'size'):
                         filesize = value.size
                     elif issubclass(type(value), IOBase):
@@ -460,13 +463,14 @@ class ScriptParameters(WooeyPy2Mixin, models.Model):
             fileinfo = utils.get_file_info(local_path)
             # save ourself first, we have to do this because we are referenced in WooeyFile
             self.save()
-            checksum = utils.get_checksum(local_path)
+            if checksum is None:
+                checksum = utils.get_checksum(local_path)
             wooey_file, file_created = WooeyFile.objects.get_or_create(checksum=checksum)
             if file_created:
                 wooey_file.filetype = fileinfo.get('type')
                 wooey_file.filepreview = fileinfo.get('preview')
                 save_file = utils.get_storage().open(local_path)
-                save_path = self.job.get_relative_path(local_path)
+                save_path = path
                 wooey_file.filepath.save(save_path, save_file, save=False)
                 wooey_file.filepath.name = save_path
                 wooey_file.save()
@@ -485,7 +489,7 @@ class UserFile(WooeyPy2Mixin, models.Model):
         app_label = 'wooey'
 
     def __str__(self):
-        return '{}: {}'.format(self.job.job_name, self.system_file.filepath.name)
+        return '{}: {}'.format(self.job.job_name, self.system_file)
 
 
 class WooeyFile(WooeyPy2Mixin, models.Model):
