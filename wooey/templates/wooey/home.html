@@ -12,12 +12,6 @@
 
 {% block outer_content %}
     {{ block.super }}
-    {% if not request.user.is_authenticated %}
-        <div class="jumbotron frontpage">
-          <h1 class="wooey">{% get_wooey_setting "WOOEY_SITE_NAME" %}</h1>
-          <p>{% get_wooey_setting "WOOEY_SITE_TAG" %}</p>
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block left_sidebar %}{% endblock left_sidebar %}
@@ -25,15 +19,6 @@
 
 {% block center_content %}
     {{ block.super }}
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <form>
-             <div class="form-group">
-                <input type="text" class="form-control" id="searchform" placeholder="{% trans "Search for scripts..." %}">
-              </div>
-            </form>
-        </div>
-    </div>
 
     <div class="row" id="script-list">
 
