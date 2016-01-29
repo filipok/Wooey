@@ -57,7 +57,7 @@
           <div id="optiongroup-{{ group_slug }}" class="tab-pane fade in {% if forloop.first %}active{% endif %}">
 
             {% for field in group.form %}
-                <div class="form-group row">
+                <div class="form-group">
                 {{ field.errors }}
                 {% if not field.is_hidden %}
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -85,11 +85,11 @@
             <div id="collapse-metadata" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                <div class="form-group row">
+                <div class="form-group">
                     <label for="job-name">{% trans "Job Name" %}</label>
                     <input class="form-control" id="wooey_job_name" type="text" id="job-name" name="job_name" placeholder="{% trans "Job Name" %}" value="{{ script.script_name }} {% now "Ymd-G:i" %}"/>
                 </div>
-                <div class="form-group row">
+                <div class="form-group">
                     <label for="job-description">{% trans "Job Description" %}</label>
                     <textarea class="form-control" id="wooey_job_description" cols="30" rows="5" id="job-description" name="job_description" placeholder="{% trans "Enter job description here..." %}"></textarea>
                 </div>
@@ -102,7 +102,9 @@
             <button id="wooey-form-submit" type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
         </div>
     </form>
-</div>
+
+
+  </div>
 
 {% endblock center_content %}
 
