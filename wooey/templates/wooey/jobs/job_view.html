@@ -134,6 +134,7 @@
             </ul>
             </div>
 
+            {% if request.user.is_authenticated %}
             <div class="btn-group">
             {% url 'wooey:celery_results_uuid' job_info.job.uuid as permalink %}
             {% absolute_url permalink as permalink %}
@@ -152,6 +153,7 @@
                 <li><a href="mailto:?subject={% blocktrans with job_id=job_info.job.id job_status=job_info.job.status %}Wooey Job #{{ job_id }} is {{ job_status }}{% endblocktrans %}&body={% blocktrans with permalink=permalink %}You can see the result and any outputs at the following link:%0D%0A{{ permalink }}{% endblocktrans %}"><span class="glyphicon glyphicon-envelope"></span> {% trans "Email" %}</a></li>
             </ul>
             </div>
+            {% endif %}
 
 
     {% include 'wooey/modals/permalink_modal.html' %}
