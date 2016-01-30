@@ -161,6 +161,35 @@
 
         {% endif %}
 
+        {% if request.user.is_authenticated %}
+    <form action="{% url 'wooey:celery_task_command' %}" id="wooey-job-submit" method="post">
+        {% csrf_token %}
+        <input name="job-id" value="{{ job_info.job.pk }}" type="hidden">
+
+        {% if not job_info.job.status|complete_job %}
+            <button class="btn btn-primary btn-danger btn-md" name="celery-command" value="stop" type="submit">
+                <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> {% trans "Stop" %}
+            </button>
+        {% else %}
+            <button class="btn btn-primary btn-warning btn-md" name="celery-command" value="rerun" type="submit">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> {% trans "Re-run" %}
+            </button>
+        {% endif %}
+        <button class="btn btn-warning btn-md" name="celery-command" value="resubmit" type="submit">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> {% trans "Resubmit" %}
+        </button>
+        <button class="btn btn-primary btn-md" name="celery-command" value="clone" type="submit">
+            <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> {% trans "Clone" %}
+        </button>
+
+        <button class="btn btn-danger btn-md" name="celery-command" value="delete" type="submit">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {% trans "Delete" %}
+        </button>
+
+
+    </form>
+    {% endif %}
+
     </div>
     </div>
 
